@@ -56,7 +56,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     // Make Password Hash
-    password_hash($password, PASSWORD_DEFAULT) . "\n";
+    $password =  password_hash($password, PASSWORD_DEFAULT) . "\n";
 
     if (empty($fname_err) && empty($lname_err) && empty($email_err) && empty($password_err) && empty($confirm_password_err)) {
         $query = "INSERT INTO consultants(consultant_fname,consultant_lname,consultant_email,consultant_username,consultant_pass,initial_id ) values(?,?,?,?,?,?)";

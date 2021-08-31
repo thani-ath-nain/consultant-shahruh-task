@@ -1,30 +1,10 @@
 <?php
-require_once "./DBController.php";
-
-
-
-function populateDropDown($sql, $select_tag_name) {
-  $db_handler = new DBOperations\DBRunQueries();
-  $result = $db_handler->runBaseQuery($sql);
-  echo "<select name='{$select_tag_name}' >";
-  for ($i = 0; $i < count($result); $i++) {
-    echo "<option value='" . $result[$i]['initial_id'] . "'>" . $result[$i]['initial'] . "</option>";
-  }
-  echo "</select>";
-}
-
-
-
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-  echo "Submitted";
-  if (!empty($_POST['initialٖ'])) {
-    echo "<pre>";
-    echo ($_POST["initialٖ"]);
-    echo "</pre>";
-  }
+  $password = $_POST["password"];
+  $password =  password_hash($password, PASSWORD_DEFAULT) . "\n";
+  echo $password;
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -37,12 +17,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 <body>
   <form action="" method="post">
-    <?php
-    $sql = "select * from consultant_initials";
-    $tag_name = "initialٖ";
-    populateDropDown($sql, $tag_name);
-
-    ?>
+    <input type="password" name="password" id="">
     <input type="submit" value="Submit">
   </form>
 </body>
