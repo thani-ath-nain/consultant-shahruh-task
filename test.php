@@ -1,25 +1,11 @@
 <?php
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-  $password = $_POST["password"];
-  $password =  password_hash($password, PASSWORD_DEFAULT) . "\n";
-  echo $password;
-}
-?>
-<!DOCTYPE html>
-<html lang="en">
 
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
-</head>
+require_once "./DBController.php";
 
-<body>
-  <form action="" method="post">
-    <input type="password" name="password" id="">
-    <input type="submit" value="Submit">
-  </form>
-</body>
+$db_handle = new DBOperations\DBRunQueries();
 
-</html>
+$q = "SELECT customer_id from customers where customer_name =?";
+$company =  $_COOKIE["company"];
+$res = $db_handle->runQuery($q, "s", array($company));
+$cust_id = $res[0]["customer_id"];
+echo $cust_id;

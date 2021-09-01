@@ -8,6 +8,7 @@ $auth = new DBOperations\DBAuth();
 $db_handle = new DBOperations\DBHandler();
 $util1 = new Utilities\BasicUtilities();
 $util2 = new Utilities\CryptoUtilities();
+$isConsultant = "";
 
 require_once "authCookieSessionValidate.php";
 
@@ -22,12 +23,24 @@ if (!empty($_POST["login"])) {
   $password = $_POST["member_password"];
 
   $user = $auth->getMemberByUsername($username);
-  if (password_verify($password, $user[0]["member_password"])) {
-    $isAuthenticated = true;
+  if (!empty($user)) {
+    if (password_verify($password, $user[0]["member_password"])) {
+      $isAuthenticated = true;
+      $_SESSION["member_id"] = $user[0]["member_id"];
+      $isConsultant = false;
+    }
+  } else {
+    $user = $auth->getConsultantByUsername($username);
+    if (password_verify($password, $user[0]["consultant_pass"])) {
+      $isAuthenticated = true;
+      $_SESSION["member_id"] = $user[0]["consultant_id"];
+      $isConsultant = true;
+    }
   }
 
+
   if ($isAuthenticated) {
-    $_SESSION["member_id"] = $user[0]["member_id"];
+
 
     // Set Auth Cookies if 'Remember Me' checked
     if (!empty($_POST["remember"])) {
@@ -54,7 +67,11 @@ if (!empty($_POST["login"])) {
     } else {
       $util->clearAuthCookie();
     }
-    $util->redirect("dashboard.php");
+    if (!$isConsultant) {
+      $util->redirect("dashboard.php");
+    } else {
+      $util->redirect("add-company.php");
+    }
   } else {
     $message = "Invalid Login";
   }
@@ -128,3 +145,17 @@ if (!empty($_POST["login"])) {
 </body>
 
 </html>
+
+
+<!--
+  TODO: Remake dashboard with template
+  TODO: Adminn can view all consultants
+  TODO: Consultant can add project
+  TODO: Consultant can view his companies and his contacts there
+  TODO: Consultant can view all his projects
+  TODO: Admin can view all companies , contacts
+  TODO: Admin can view all projects
+  TODO: Better organization of files
+
+
+-->

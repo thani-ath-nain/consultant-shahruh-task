@@ -1,0 +1,2 @@
+- Made a function that can make dropd own from any table
+- How password_hash() works

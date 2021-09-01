@@ -61,12 +61,12 @@ class DBRunQueries extends DBHandler {
         ), $param_value_reference);
     }
 
-    function populateDropDownFromDB($sql, $select_tag_name, $id) {
+    function populateDropDownFromDB($sql, $select_tag_name, $class_name, $id_col, $val_col) {
         $result = $this->runBaseQuery($sql);
-        echo "<select name='{$select_tag_name}' id= '{$id}' >";
-        
+        echo "<select name='{$select_tag_name}' class= '{$class_name}' >";
+
         for ($i = 0; $i < count($result); $i++) {
-            echo "<option value='" . $result[$i]['initial_id'] . "'>" . $result[$i]['initial'] . "</option>";
+            echo "<option value='" . $result[$i][$id_col] . "'>" . $result[$i][$val_col] . "</option>";
         }
         echo "</select>";
     }
@@ -88,6 +88,13 @@ class DBAuth extends DBHandler {
     function getMemberByUsername($username) {
         $db_handle = new DBRunQueries();
         $query = "Select * from members where member_name = ?";
+        $result = $db_handle->runQuery($query, 's', array($username));
+        return $result;
+    }
+
+    function getConsultantByUsername($username) {
+        $db_handle = new DBRunQueries();
+        $query = "Select * from consultants where consultant_username = ?";
         $result = $db_handle->runQuery($query, 's', array($username));
         return $result;
     }

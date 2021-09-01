@@ -56,7 +56,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     // Make Password Hash
-    $password =  password_hash($password, PASSWORD_DEFAULT) . "\n";
+    $password =  password_hash($password, PASSWORD_DEFAULT);
 
     if (empty($fname_err) && empty($lname_err) && empty($email_err) && empty($password_err) && empty($confirm_password_err)) {
         $query = "INSERT INTO consultants(consultant_fname,consultant_lname,consultant_email,consultant_username,consultant_pass,initial_id ) values(?,?,?,?,?,?)";
@@ -134,8 +134,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                     <?php
                                     $sql = "select * from consultant_initials";
                                     $tag_name = "initialٖ";
-                                    $id = "consul-select";
-                                    $db_handle->populateDropDownFromDB($sql, $tag_name, $id); ?>
+                                    $class_name = "form-select";
+                                    $id_col = "initial_id ";
+                                    $val_col = "initial";
+                                    $db_handle->populateDropDownFromDB($sql, $tag_name, $class_name, $id_col, $val_col); ?>
 
                                     <div class="text-center mt-3">
                                         <input type="submit" name="add" class="btn btn-lg btn-success"></input>
@@ -175,13 +177,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             border-radius: .2rem;
         }
     </style>
-    <script>
-        function addClass() {
-            var v = document.getElementById("consul-select");
-            v.className += "form-select";
-        }
-        addClass();
-    </script>
 </body>
 
 </html>
