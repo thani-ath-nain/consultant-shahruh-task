@@ -1,7 +1,10 @@
 <?php
 session_start();
 
-require "Util.php";
+
+require_once "./Util.php";
+
+
 $util = new Utilities\BasicUtilities();
 
 //Clear Session

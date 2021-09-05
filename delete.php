@@ -1,13 +1,28 @@
 <?php
+session_start();
 require_once "./DBController.php";
 require_once "./Util.php";
+
 $db_handle = new DBOperations\DBRunQueries();
 $util = new Utilities\BasicUtilities();
-print_r($_GET);
+$is_query_successful = false;
+
+print_r($_SESSION);
 if (isset($_POST["id"]) && !empty($_POST["id"])) {
-    if ($_GET["type"] == "contact") {
-        echo "type is contact";
-        sleep(2);
+    
+    if ($_SESSION["type"] == "company") {
+
+        $param_id = trim($_POST["id"]);
+        $is_query_successful = $db_handle->delete("DELETE from customers where customer_id = ?", "i", array($param_id));
+
+        if ($is_query_successful) {
+            $util->redirect("all-companies.php");
+            exit();
+        } else {
+            echo "Oops! Something went wrong. Please try again later.";
+        }
+    } elseif ($_SESSION["type"] == "contact") {
+
         $param_id = trim($_POST["id"]);
         $is_query_successful = $db_handle->delete("DELETE from consultant_contacts where contact_id = ?", "i", array($param_id));
 
@@ -17,6 +32,35 @@ if (isset($_POST["id"]) && !empty($_POST["id"])) {
         } else {
             echo "Oops! Something went wrong. Please try again later.";
         }
+    } elseif ($_SESSION["type"] == "project") {
+
+        $param_id = trim($_POST["id"]);
+        $is_query_successful = $db_handle->delete("DELETE from project where project_id = ?", "i", array($param_id));
+
+        if ($is_query_successful) {
+            $util->redirect("all-projects.php");
+            exit();
+        } else {
+            echo "Oops! Something went wrong. Please try again later.";
+        }
+    } elseif ($_SESSION["type"] == "consultant") {
+
+        $param_id = trim($_POST["id"]);
+        $is_query_successful = $db_handle->delete("DELETE from consultants where consultant_id = ?", "i", array($param_id));
+
+        if ($is_query_successful) {
+            $util->redirect("all-consultants.php");
+            exit();
+        } else {
+            echo "Oops! Something went wrong. Please try again later.";
+        }
+    }
+} else {
+
+    if (empty(trim($_GET["id"]))) {
+
+        $util->redirect("error.php");
+        exit();
     }
 }
 ?>

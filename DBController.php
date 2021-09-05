@@ -73,13 +73,18 @@ class DBRunQueries extends DBHandler {
     function insert($query, $param_type, $param_value_array) {
         $sql = $this->conn->prepare($query);
         $this->bindQueryParams($sql, $param_type, $param_value_array);
-        $sql->execute();
+        return $sql->execute();
     }
 
     function update($query, $param_type, $param_value_array) {
         $sql = $this->conn->prepare($query);
         $this->bindQueryParams($sql, $param_type, $param_value_array);
-        $sql->execute();
+        return $sql->execute();
+    }
+    function delete($query, $param_type, $param_value_array) {
+        $sql = $this->conn->prepare($query);
+        $this->bindQueryParams($sql, $param_type, $param_value_array);
+        return $sql->execute();
     }
 }
 

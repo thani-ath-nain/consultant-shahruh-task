@@ -1,7 +1,8 @@
 <?php
 session_start();
 
-require_once "authCookieSessionValidate.php";
+require_once "./authCookieSessionValidate.php";
+
 
 if (!$isLoggedIn) {
     header("Location: ./");
@@ -70,7 +71,7 @@ if (!$isLoggedIn) {
                     <li class="nav-item">
                         <a class="nav-link " href="#" tabindex="0">All Contacts</a>
                     </li>
-                    
+
                 </ul>
                 </li>
                 </ul>

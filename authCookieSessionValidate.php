@@ -1,6 +1,6 @@
 <?php 
-require_once "Util.php";
 require_once "./DBController.php";
+require_once "./Util.php";
 
 $auth = new DBOperations\DBAuth();
 $db_handle = new DBOperations\DBRunQueries();

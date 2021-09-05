@@ -1,10 +1,20 @@
 <?php
 
-use Utilities\BasicUtilities;
+session_start();
+
 
 require_once "./DBController.php";
 require_once "./Util.php";
 // Initialize Variables
+
+require_once "authCookieSessionValidate.php";
+
+
+if (!$isLoggedIn) {
+    $util->redirect("index.php");
+}
+
+
 
 $company_name = $company_address  = $company_type = $company_country = "";
 $company_name_err = $company_address_err = "";
@@ -29,9 +39,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $company_type = $_POST["types"];
 
     if (empty($company_name_err) && empty($company_address_err)) {
-        $query = "INSERT INTO customers(customer_name, customer_type , customer_address , customer_country) values(?,?,?,?)";
-        $db_handle->insert($query, 'ssss', array($company_name, $company_type, $company_address, $company_country));
-        setcookie("company", $company_name, time() + (86400 * 30), "/");
+        $query = "INSERT INTO customers(customer_name, customer_type , customer_address , customer_country , consultant_id) values(?,?,?,?,?)";
+        $consul_id = $_SESSION["member_id"];
+        echo $_SESSION["member_id"];
+        $db_handle->insert($query, 'ssssi', array($company_name, $company_type, $company_address, $company_country, $consul_id));
+        $_SESSION["company"] = $company_name;
         $util->redirect("add-contacts.php");
     }
 }

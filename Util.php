@@ -53,4 +53,22 @@ class BasicUtilities {
             setcookie("random_selector", "");
         }
     }
+    static public function render_table_markup($table_cols) {
+        echo '<table class="table table-bordered table-striped">';
+        echo "<thead>";
+        echo "<tr>";
+        for ($i = 0; $i < count($table_cols); $i++) {
+            echo "<th>$table_cols[$i]</th>";
+        }
+        echo "</tr>";
+        echo "</thead>";
+    }
+    static public function render_read_crud_data($headings_arr, $row, $col_names) {
+        for ($i = 1; $i < count($headings_arr); $i++) {
+            echo "<div class='form-group'>";
+            echo '<label>' . $headings_arr[$i] . '</label>';
+            echo '<p><b>' . $row[0][$col_names[$i]]  . '</b></p>';
+            echo "</div>";
+        }
+    }
 }

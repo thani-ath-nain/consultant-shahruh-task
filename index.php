@@ -1,16 +1,20 @@
 <?php
 session_start();
 
-require_once "Util.php";
 require_once "./DBController.php";
+require_once "./Util.php";
+require_once "./authCookieSessionValidate.php";
+
+
 
 $auth = new DBOperations\DBAuth();
 $db_handle = new DBOperations\DBHandler();
 $util1 = new Utilities\BasicUtilities();
 $util2 = new Utilities\CryptoUtilities();
-$isConsultant = "";
 
-require_once "authCookieSessionValidate.php";
+
+
+
 
 if ($isLoggedIn) {
   $util->redirect("dashboard.php");
@@ -27,14 +31,14 @@ if (!empty($_POST["login"])) {
     if (password_verify($password, $user[0]["member_password"])) {
       $isAuthenticated = true;
       $_SESSION["member_id"] = $user[0]["member_id"];
-      $isConsultant = false;
+      $_SESSION["is_admin"] = 1;
     }
   } else {
     $user = $auth->getConsultantByUsername($username);
     if (password_verify($password, $user[0]["consultant_pass"])) {
       $isAuthenticated = true;
       $_SESSION["member_id"] = $user[0]["consultant_id"];
-      $isConsultant = true;
+      $_SESSION["is_admin"] = 0;
     }
   }
 
@@ -67,7 +71,7 @@ if (!empty($_POST["login"])) {
     } else {
       $util->clearAuthCookie();
     }
-    if (!$isConsultant) {
+    if ($_SESSION["is_admin"]) {
       $util->redirect("dashboard.php");
     } else {
       $util->redirect("add-company.php");
@@ -109,7 +113,7 @@ if (!empty($_POST["login"])) {
   </style>
 
   <!-- Custom styles for this template -->
-  <link href="signin.css" rel="stylesheet" />
+  <link href="./signin.css" rel="stylesheet" />
 </head>
 
 <body class="text-center">

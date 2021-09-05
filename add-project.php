@@ -1,13 +1,22 @@
 <?php
-//TODO: Check if logged in
 
-use Utilities\BasicUtilities;
+
+session_start();
 
 require_once "./DBController.php";
 require_once "./Util.php";
+include_once "./authCookieSessionValidate.php";
+
+
+if (!$isLoggedIn) {
+    $util->redirect("index.php");
+}
+
 
 $db_handle = new DBOperations\DBRunQueries();
 $util = new Utilities\BasicUtilities();
+$consul_id = $_SESSION["member_id"];
+
 
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -26,17 +35,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     //TODO: Make it into a function
 
     $q = "SELECT customer_id from customers where customer_name =?";
-    $company =  $_COOKIE["company"];
+    $company =  $_SESSION["company"];
     $res = $db_handle->runQuery($q, "s", array($company));
     $cust_id = $res[0]["customer_id"];
 
     $query = "INSERT INTO projects
-    (proj_freq,proj_name,month_completes,project_type,is_completed,company_id) 
-    VALUES(?,?,?,?,?,?)";
+    (proj_freq,proj_name,month_completes,project_type,is_completed,company_id, consultant_id) 
+    VALUES(?,?,?,?,?,?,?)";
     $db_handle->insert(
         $query,
-        "issiii",
-        array($proj_freq, $project_name, $proj_completes_date, $proj_type, $status, $cust_id)
+        "issiiii",
+        array($proj_freq, $project_name, $proj_completes_date, $proj_type, $status, $cust_id, $consul_id)
     );
 
     $util->redirect("night.php");
@@ -69,7 +78,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <div class="text-center mt-4">
                         <h1>Add A New Project</h1>
                         <p class="lead">
-                            Enter the details of your project with <?php echo "<b>{$_COOKIE["company"]}</b>"; ?>
+                            Enter the details of your project with <?php echo "<b>{$_SESSION["company"]}</b>"; ?>
                         </p>
                     </div>
 

@@ -1,10 +1,18 @@
 <?php
 //TODO: Check if logged in
+session_start();
 
-use Utilities\BasicUtilities;
 
 require_once "./DBController.php";
 require_once "./Util.php";
+require_once "./authCookieSessionValidate.php";
+
+
+if (!$isLoggedIn || !(isset($_SESSION["company"]) ) ) {
+    $util->redirect("index.php");
+}
+
+
 
 $db_handle = new DBOperations\DBRunQueries();
 $util = new Utilities\BasicUtilities();
@@ -20,17 +28,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $notes = $_POST["notes"];
 
     $q = "SELECT customer_id from customers where customer_name =?";
-    $company =  $_COOKIE["company"];
+    $company =  $_SESSION["company"];
     $res = $db_handle->runQuery($q, "s", array($company));
     $cust_id = $res[0]["customer_id"];
-    echo $cust_id;
+
+    $consul_id = $_SESSION["member_id"];
 
     $query = "INSERT INTO consultant_contacts
-    (contact_name,contact_email,contact_telephone1,contact_telephone2,last_day_contacted,next_day_to_contact,notes_on_last_call,customer_id) 
-    VALUES(?,?,?,?,?,?,?,?)";
+    (contact_name,contact_email,contact_telephone1,contact_telephone2,last_day_contacted,next_day_to_contact,
+    notes_on_last_call,customer_id, consultant_id) 
+    VALUES(?,?,?,?,?,?,?,?,?)";
     $db_handle->insert(
         $query,
-        "sssssssi",
+        "sssssssii",
         array(
             $contact_name,
             $contact_email,
@@ -39,11 +49,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $contact_last_contacted,
             $contact_next_date_to_contact,
             $notes,
-            $cust_id
+            $cust_id,
+            $consul_id
         )
     );
-
-    $util->redirect("add-project.php");
+    if (isset($_POST["submit"])) {
+        $util->redirect("add-project.php");
+    }
 }
 
 ?>
@@ -73,7 +85,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <div class="text-center mt-4">
                         <h1>Add Contact</h1>
                         <p class="lead">
-                            Enter the details of your contact at <?php echo "<b>{$_COOKIE["company"]}</b>"; ?>
+                            Enter the details of your contact at <?php echo "<b>{$_SESSION["company"]}</b>"; ?>
                         </p>
                     </div>
 
@@ -121,7 +133,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                         <textarea class="form-control" id="notes-last" name="notes" rows="7"></textarea>
                                     </div>
                                     <div class="text-center mt-3">
-                                        <input type="submit" name="add" class="btn btn-lg btn-success"></input>
+                                        <input type="submit" name="add" value="Add" class="btn btn-lg btn-success"></input>
+                                        <input type="submit" name="submit" value="Submit" class="btn btn-lg btn-success"></input>
                                     </div>
                                 </form>
                             </div>
