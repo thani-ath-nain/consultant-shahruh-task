@@ -1,4 +1,4 @@
-# consultant-shahruh-task
+# Simple CRMS Internship Project
 ## Project Background
 This project was created as a part of an internship I did during July-September 2021 at a startup called Shahruh Event Technologies. 
 As a part of this project, I was given an informal document of software specifications and using this document, I implemented a small CRM System.
