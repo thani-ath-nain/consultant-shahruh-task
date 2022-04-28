@@ -7,8 +7,8 @@ A consultant can:
 - Add Project
 - Add Company
 - Add Contact at company
-- View complete CRUD of both   
-An admin can do all of that and:
+- View complete CRUD of both  
+<br/>An admin can do all of that and:
 - Add Consultants
 Session is maintained using session cookies and all of the information is stored in a mySQL database.
 ## Code Features
